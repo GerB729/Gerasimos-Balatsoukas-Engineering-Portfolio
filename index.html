@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  GERASIMOS BALATSOUKAS: ENGINEERING PORTFOLIO (single-page website, v3)
+  ============================================================================
+  The site is three text files plus its assets:
+    index.html     the words, the figures and the page structure (this file)
+    css/site.css   every colour, font, size and layout rule
+    js/site.js     the theme control, the mobile menu, the project switching,
+                   the print buttons, the lightbox, the hero clip and the
+                   scroll reveals
+  Pictures live in images/ (WebP), clips in media/ (MP4), fonts in fonts/,
+  and the CV is Gerasimos_Balatsoukas_CV.pdf. The only script in this file is
+  the small one in <head> that restores a saved light or dark choice; it has
+  to run before the page paints, otherwise a dark page flashes white first.
+
+  >>> SITE_URL: the address the site will live at is written as
+      https://site-url.example/  in this file (five times), in 404.html,
+      robots.txt and sitemap.xml. Replace every copy with the real address,
+      ending in a slash, before or right after publishing. README.md has a
+      one-line command that does all of them.
+
+  HOW IT WORKS
+  ----------------------------------------------------------------------------
+  - The page is split into views: the landing page, About, Experience and one
+    view per project. Only one view shows at a time. If JavaScript is off,
+    every view shows in one long scroll, so the page is never blank.
+  - Each figure is a thumbnail with its caption underneath. Selecting it opens
+    a large version; the arrow keys move between figures. Clips are
+    thumbnails too, and play when opened.
+  - The browser back button works, and links such as  ...#stent  open that
+    project directly.
+
+  HOW TO EDIT
+  ----------------------------------------------------------------------------
+  - COLOURS AND FONTS: the variables in the ":root" block at the top of
+    css/site.css. The dark-mode values sit just below it, twice (see the note
+    there).
+  - TEXT: find the project by its banner (for example "PROJECT: RARE-EARTH-FREE
+    WIND TURBINE GENERATOR") and type over the words.
+  - KEY RESULTS: each project has a <ul class="results"> block. A number goes
+    in <b> with its label in <span>; a result without a number is a plain
+    <li class="results-plain">.
+  - ADD A FIGURE: make a WebP (README.md, "Adding a figure"), put it in
+    images/, then copy an existing <figure> block and change data-src, src,
+    srcset, width, height, alt and the caption. A picture more than twice as
+    wide as it is tall gets class "fig wide".
+        <figure class="fig" data-type="image" data-src="images/new-figure.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 5: </span>
+            <img src="images/new-figure.webp"
+                 srcset="images/new-figure-800.webp 800w, images/new-figure.webp 1600w"
+                 sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw"
+                 width="1600" height="1000" alt="What the figure shows"
+                 loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 5.</b> The caption.</figcaption>
+        </figure>
+  - ADD A CLIP: put the MP4 in media/ and a poster frame in images/, then copy
+    an existing figure with data-type="video" and class "fig fig-video".
+  - ADD A PROJECT: README.md, "Adding a project".
+  - PUBLISH: README.md, "Publishing on GitHub Pages".
+  ============================================================================
+-->
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerasimos Balatsoukas | Mechanical and Biomedical Engineer</title>
+<meta name="description" content="Mechanical and biomedical engineer. I design engineering components and prove them in simulation and in the lab.">
+<meta name="author" content="Gerasimos Balatsoukas">
+<meta name="theme-color" content="#f4f7f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1a1e" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://site-url.example/">
+
+<!-- Link preview (LinkedIn, WhatsApp, email, Slack). The addresses use SITE_URL. -->
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Gerasimos Balatsoukas">
+<meta property="og:title" content="Gerasimos Balatsoukas, mechanical and biomedical engineer">
+<meta property="og:description" content="Mechanical and biomedical engineer. I design engineering components and prove them in simulation and in the lab.">
+<meta property="og:url" content="https://site-url.example/">
+<meta property="og:image" content="https://site-url.example/images/og-card.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gerasimos Balatsoukas, mechanical and biomedical engineer, beside a simulated coronary stent">
+<meta property="og:locale" content="en_GB">
+<meta property="profile:first_name" content="Gerasimos">
+<meta property="profile:last_name" content="Balatsoukas">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Gerasimos Balatsoukas",
+  "jobTitle": "Mechanical and Biomedical Engineer",
+  "url": "https://site-url.example/",
+  "email": "mailto:balatsoukas.gerasimos@gmail.com",
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "Cranfield University" },
+    { "@type": "CollegeOrUniversity", "name": "University of Glasgow" }
+  ],
+  "sameAs": [
+    "https://www.linkedin.com/in/gerasimos-balatsoukas-234525313",
+    "https://doi.org/10.1101/2025.06.19.660455"
+  ]
+}
+</script>
+
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
+<script>
+/* Runs before the page paints, so a saved dark choice does not flash white. */
+(function(){
+  document.documentElement.classList.add('js');
+  try{
+    var saved = localStorage.getItem('theme');
+    if(saved === 'light' || saved === 'dark'){
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }catch(e){ /* private browsing can block localStorage; fall back to system */ }
+  /* Fonts are self-hosted in fonts/. The heading face is preloaded because the
+     first thing on screen is set in it. Browsers refuse a preload from a page
+     opened as a file, so the hint is only added when the page is served. */
+  if(location.protocol !== 'file:'){
+    var l = document.createElement('link');
+    l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous';
+    l.href = 'fonts/archivo/archivo-latin-wght-normal.woff2';
+    document.head.appendChild(l);
+  }
+})();
+</script>
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ====================== TOP NAVIGATION ====================== -->
+<nav class="nav" aria-label="Primary">
+  <a class="brand" translate="no" href="#home">Gerasimos Balatsoukas</a>
+
+  <button class="nav-toggle" type="button" id="navToggle"
+          aria-expanded="false" aria-controls="navLinks">
+    <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    Menu
+  </button>
+
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="#work" data-nav="work">Work</a>
+    <a class="nav-link" href="#about" data-nav="about">About</a>
+    <a class="nav-link" href="#experience" data-nav="experience">Experience</a>
+    <a class="btn btn-solid nav-cv no-print" href="Gerasimos_Balatsoukas_CV.pdf" target="_blank" rel="noopener">Download CV<span class="sr-only"> (PDF, opens in a new tab)</span></a>
+    <!-- the label names the mode the button switches to; js/site.js keeps it current -->
+    <button class="theme-toggle no-print" type="button" id="themeToggle" aria-label="Switch to dark mode">Dark</button>
+  </div>
+</nav>
+
+<!-- announces the project change to screen readers -->
+<p class="sr-only" id="viewStatus" role="status" aria-live="polite"></p>
+
+<main id="main">
+
+<!-- ============================================================ -->
+<!-- LANDING PAGE                                                 -->
+<!-- ============================================================ -->
+<section class="view active" id="home" aria-labelledby="homeTitle">
+
+  <header class="hero">
+    <p class="hero-name" translate="no">Gerasimos Balatsoukas</p>
+    <h1 class="hero-title" id="homeTitle">I design engineering components and prove them in simulation and in the lab.</h1>
+    <div class="hero-text">
+      <p class="hero-lede">MSc Advanced Mechanical Engineering, Cranfield. BEng Biomedical Engineering, Glasgow. Co-author of a piezoelectric scaffold preprint.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="#work">View projects</a>
+        <a class="btn btn-ghost no-print" href="Gerasimos_Balatsoukas_CV.pdf" target="_blank" rel="noopener">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download CV<span class="sr-only"> (PDF, opens in a new tab)</span>
+        </a>
+      </div>
+    </div>
+    <figure class="hero-media">
+      <div class="hero-frame">
+        <!-- Plays only when js/site.js allows it (no reduced motion, no data
+             saving). Without JavaScript the poster frame is shown. -->
+        <video class="hero-video" id="heroVideo" width="740" height="462"
+               muted loop playsinline preload="none"
+               poster="images/hero-stent-poster.webp"
+               aria-label="Animation of a coronary stent expanding under a balloon and springing back">
+          <source src="media/hero-stent.mp4" type="video/mp4">
+        </video>
+        <img class="print-only" src="images/hero-stent-poster.webp" width="740" height="462"
+             alt="A coronary stent after balloon expansion and springback, coloured by von Mises stress">
+      </div>
+      <figcaption>
+        <span>A coronary stent expanding under a balloon and springing back, coloured by von Mises stress in Abaqus.</span>
+        <button class="hero-toggle no-print" type="button" id="heroToggle" hidden>Pause</button>
+      </figcaption>
+    </figure>
+  </header>
+
+  <section class="proof" aria-label="Key facts">
+    <dl class="proof-list">
+      <div class="proof-item"><dt>Publication</dt><dd><a href="https://doi.org/10.1101/2025.06.19.660455" target="_blank" rel="noopener">Second author, bioRxiv preprint<span class="sr-only"> (opens in a new tab)</span></a></dd></div>
+      <div class="proof-item"><dt>Simulation</dt><dd>2.5&nbsp;MW generator validated in Maxwell</dd></div>
+      <div class="proof-item"><dt>Hardware</dt><dd>Wet tensile rig, designed and built</dd></div>
+      <div class="proof-item"><dt>Industry</dt><dd>PwC business consulting internship</dd></div>
+    </dl>
+  </section>
+
+  <section class="work" id="work" aria-labelledby="workTitle">
+    <h2 class="section-title" id="workTitle">Selected projects</h2>
+    <ul class="work-grid">
+      <li class="card card-wide">
+        <a class="card-link" href="#stent" aria-labelledby="card-stent-t" aria-describedby="card-stent-d">
+          <div class="card-media"><img src="images/card-stent.webp" srcset="images/card-stent-480.webp 480w, images/card-stent.webp 779w" sizes="(min-width: 1024px) 660px, (min-width: 760px) calc(100vw - 64px), calc(100vw - 32px)" width="779" height="487" alt="Von Mises stress contour on a coronary stent at 75 percent expansion" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-stent-t">Coronary stent design and expansion model</h3>
+            <p class="card-outcome" id="card-stent-d">From CAD to an expansion and recoil model, mesh-independent to within 5&nbsp;%</p>
+            <p class="card-tools"><span>Fusion 360</span><span>Abaqus</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card-link" href="#scaffolds" aria-labelledby="card-scaffolds-t" aria-describedby="card-scaffolds-d">
+          <div class="card-media"><img src="images/card-scaffolds.webp" srcset="images/card-scaffolds-480.webp 480w, images/card-scaffolds-800.webp 800w, images/card-scaffolds.webp 1200w" sizes="(min-width: 1024px) 580px, (min-width: 760px) calc(50vw - 44px), calc(100vw - 32px)" width="1200" height="750" alt="A rolled fibre construct seen through a microscope eyepiece" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-scaffolds-t">Piezoelectric scaffolds for muscle regeneration</h3>
+            <p class="card-outcome" id="card-scaffolds-d">Myosin expression within 5&nbsp;days on a piezoelectric PHBV scaffold</p>
+            <p class="card-tools"><span>Electrospinning</span><span>Mechanical testing</span><span>Cell culture</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card-link" href="#generator" aria-labelledby="card-generator-t" aria-describedby="card-generator-d">
+          <div class="card-media"><img src="images/card-generator.webp" srcset="images/card-generator-480.webp 480w, images/card-generator-800.webp 800w, images/card-generator.webp 932w" sizes="(min-width: 1024px) 580px, (min-width: 760px) calc(50vw - 44px), calc(100vw - 32px)" width="932" height="583" alt="Labelled cutaway of a direct-drive generator with a wound rotor" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-generator-t">Rare-earth-free wind turbine generator</h3>
+            <p class="card-outcome" id="card-generator-d">2.5&nbsp;MW peak and 92.7&nbsp;% electromagnetic efficiency without rare-earth magnets</p>
+            <p class="card-tools"><span>Ansys Maxwell</span><span>RMxprt</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card card-span-tablet">
+        <a class="card-link" href="#bedtower" aria-labelledby="card-bedtower-t" aria-describedby="card-bedtower-d">
+          <div class="card-media"><img src="images/card-bedtower.webp" srcset="images/card-bedtower-480.webp 480w, images/card-bedtower-800.webp 800w, images/card-bedtower.webp 1043w" sizes="(min-width: 1024px) 380px, (min-width: 760px) calc(100vw - 64px), calc(100vw - 32px)" width="1043" height="652" alt="Render of the bedside unit placed beside a king-size bed" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-bedtower-t">Bed Tower, a bedside power unit</h3>
+            <p class="card-outcome" id="card-bedtower-d">From brief to costed concept: three cardboard models and a US$9.22 electronics bill</p>
+            <p class="card-tools"><span>Fusion 360</span><span>Double Diamond</span><span>Costing</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card card-third">
+        <a class="card-link" href="#cfd" aria-labelledby="card-cfd-t" aria-describedby="card-cfd-d">
+          <div class="card-media"><img src="images/card-cfd.webp" srcset="images/card-cfd.webp 374w" sizes="(min-width: 1024px) 380px, (min-width: 760px) calc(50vw - 44px), calc(100vw - 32px)" width="374" height="231" alt="Velocity contour around the rear of an aerofoil, with the wake behind a Gurney flap" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-cfd-t">NACA 4412 aerofoil with a Gurney flap</h3>
+            <p class="card-outcome" id="card-cfd-d">A Gurney flap added up to 79&nbsp;% lift and up to 96&nbsp;% drag, with a GCI of 0.037&nbsp;%</p>
+            <p class="card-tools"><span>Ansys ICEM</span><span>Fluent</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card card-third">
+        <a class="card-link" href="#biosensor" aria-labelledby="card-biosensor-t" aria-describedby="card-biosensor-d">
+          <div class="card-media"><img src="images/card-biosensor.webp" srcset="images/card-biosensor.webp 407w" sizes="(min-width: 1024px) 380px, (min-width: 760px) calc(50vw - 44px), calc(100vw - 32px)" width="407" height="254" alt="Simulated fluid front in a four-chamber paper channel" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-biosensor-t">Paper microfluidic creatinine sensor</h3>
+            <p class="card-outcome" id="card-biosensor-d">Stain timing moved from 68&nbsp;s to about 152&nbsp;s over three simulated redesigns</p>
+            <p class="card-tools"><span>MOFEM</span><span>Gmsh</span><span>Python</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card-link" href="#forecast" aria-labelledby="card-forecast-t" aria-describedby="card-forecast-d">
+          <div class="card-media"><img src="images/card-forecast.webp" srcset="images/card-forecast-480.webp 480w, images/card-forecast.webp 678w" sizes="(min-width: 1024px) 580px, (min-width: 760px) calc(50vw - 44px), calc(100vw - 32px)" width="678" height="424" alt="Heat map of forecast error by weekday and time of day" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-forecast-t">Half-hourly electricity demand forecasting</h3>
+            <p class="card-outcome" id="card-forecast-d">RMSE of 22.6 on a one-day backtest, 3.8&nbsp;% of mean demand</p>
+            <p class="card-tools"><span>Python</span><span>TensorFlow</span><span>Gradient boosting</span></p>
+          </div>
+        </a>
+      </li>
+      <li class="card">
+        <a class="card-link" href="#drug" aria-labelledby="card-drug-t" aria-describedby="card-drug-d">
+          <div class="card-media"><img src="images/card-drug.webp" srcset="images/card-drug-480.webp 480w, images/card-drug-800.webp 800w, images/card-drug.webp 930w" sizes="(min-width: 1024px) 580px, (min-width: 760px) calc(50vw - 44px), calc(100vw - 32px)" width="930" height="581" alt="Concentration field in a spherical drug carrier after one hour" loading="lazy" decoding="async"></div>
+          <div class="card-body">
+            <h3 class="card-title" id="card-drug-t">Drug release from a spherical carrier</h3>
+            <p class="card-outcome" id="card-drug-d">A false early release traced to mesh faceting and cut below 5&nbsp;%</p>
+            <p class="card-tools"><span>COMSOL Multiphysics</span></p>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="more" aria-labelledby="moreTitle">
+    <h2 class="section-title" id="moreTitle">Smaller projects and coursework</h2>
+    <ul class="more-list">
+      <li>
+        <a class="more-item" href="#cad">
+          <img src="images/thumb-bmx.webp" srcset="images/thumb-bmx.webp 192w" sizes="96px" width="96" height="96" alt="Rendered BMX bicycle" loading="lazy" decoding="async">
+          <div>
+            <h3 class="more-title">BMX bicycle assembly</h3>
+            <p class="more-line">A complete bicycle, from frame to drivetrain, modelled as one assembly and rendered.</p>
+            <p class="more-tools"><span>Fusion 360</span></p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="more-item" href="#cad">
+          <img src="images/thumb-prosthetic.webp" srcset="images/thumb-prosthetic.webp 192w" sizes="96px" width="96" height="96" alt="Rendered prosthetic leg with a blade foot" loading="lazy" decoding="async">
+          <div>
+            <h3 class="more-title">Prosthetic leg</h3>
+            <p class="more-line">A contoured socket and a sprint-blade foot, modelled and rendered as one product.</p>
+            <p class="more-tools"><span>Fusion 360</span></p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="more-item" href="#python">
+          <img src="images/thumb-cifar.webp" srcset="images/thumb-cifar.webp 192w" sizes="96px" width="96" height="96" alt="Training and validation accuracy curves" loading="lazy" decoding="async">
+          <div>
+            <h3 class="more-title">CIFAR-10 image classification</h3>
+            <p class="more-line">Three network types compared, with the convolutional model reaching about 77&nbsp;% validation accuracy.</p>
+            <p class="more-tools"><span>Python</span><span>TensorFlow</span></p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="more-item" href="#python">
+          <img src="images/thumb-segmentation.webp" srcset="images/thumb-segmentation.webp 192w" sizes="96px" width="96" height="96" alt="Colour channels and intensity histograms of a test image" loading="lazy" decoding="async">
+          <div>
+            <h3 class="more-title">Image segmentation and object counting</h3>
+            <p class="more-line">Thresholding, morphological clean-up and labelling to count objects and locate their centroids.</p>
+            <p class="more-tools"><span>scikit-image</span><span>SciPy</span></p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="more-item" href="#python">
+          <img src="images/thumb-filters.webp" srcset="images/thumb-filters.webp 192w" sizes="96px" width="96" height="96" alt="Frequency response of a low-pass filter" loading="lazy" decoding="async">
+          <div>
+            <h3 class="more-title">FIR and IIR filter design</h3>
+            <p class="more-line">Tones recovered from noise with the Fourier transform, then four filter designs compared.</p>
+            <p class="more-tools"><span>Python</span><span>SciPy</span></p>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a class="more-item" href="#python">
+          <img src="images/thumb-health.webp" srcset="images/thumb-health.webp 192w" sizes="96px" width="96" height="96" alt="Line chart of public and private shares of UK health spending, 1997 to 2013" loading="lazy" decoding="async">
+          <div>
+            <h3 class="more-title">UK healthcare expenditure charts</h3>
+            <p class="more-line">Public and private health spending from 1997 to 2013, re-plotted as one consistent set.</p>
+            <p class="more-tools"><span>Python</span><span>Matplotlib</span></p>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="intro" aria-labelledby="introTitle">
+    <img class="intro-photo" src="images/headshot-320.webp" srcset="images/headshot-320.webp 320w" sizes="(min-width: 760px) 160px, 120px" width="160" height="176"
+         alt="Gerasimos Balatsoukas" loading="lazy" decoding="async">
+    <div class="intro-text">
+      <h2 class="section-title" id="introTitle">About</h2>
+      <p>My background combines biomedical and mechanical engineering. I studied biomedical engineering at the University of Glasgow, with a focus on tissue engineering. I then took an MSc in Advanced Mechanical Engineering at Cranfield University to strengthen my simulation work. I am drawn to projects that leave the screen and get built and tested, from electrospun scaffolds in a cell culture laboratory to cardboard models beside a real bed. I am based in Milton Keynes in the UK and am comfortable relocating if a role calls for it.</p>
+      <a class="text-link" href="#about">Read more<span class="sr-only"> about me</span></a>
+    </div>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contactTitle">
+    <h2 class="section-title" id="contactTitle">Contact</h2>
+    <dl class="contact-list">
+      <div><dt>Email</dt><dd><a href="mailto:balatsoukas.gerasimos@gmail.com">balatsoukas.gerasimos@gmail.com</a></dd></div>
+      <div><dt>UK</dt><dd><a href="tel:+447565147362">+44 7565 147362</a></dd></div>
+      <div><dt>GR</dt><dd><a href="tel:+306982822545">+30 6982 822545</a></dd></div>
+      <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/gerasimos-balatsoukas-234525313" target="_blank" rel="noopener">linkedin.com/in/gerasimos-balatsoukas-234525313<span class="sr-only"> (opens in a new tab)</span></a></dd></div>
+      <div><dt>Preprint</dt><dd><a href="https://doi.org/10.1101/2025.06.19.660455" target="_blank" rel="noopener">bioRxiv, doi 10.1101/2025.06.19.660455<span class="sr-only"> (opens in a new tab)</span></a></dd></div>
+    </dl>
+    <p class="contact-note">Based in Milton Keynes, UK. Open to roles in the UK and abroad, including relocation.</p>
+  </section>
+</section>
+
+<!-- ============================================================ -->
+<!-- ABOUT                                                        -->
+<!-- ============================================================ -->
+<section class="view" id="about" aria-labelledby="aboutTitle">
+  <h2 class="page-title" id="aboutTitle">About</h2>
+  <div class="page-layout">
+    <div class="page-main">
+      <p>My background combines biomedical and mechanical engineering. I studied biomedical engineering at the University of Glasgow, with a focus on tissue engineering. I then chose an MSc in Advanced Mechanical Engineering at Cranfield University, to strengthen my simulation work at a university known for its rigour and its links to industry. My MSc thesis, sponsored by Siemens Energy, is on Type II hot corrosion of turbine blade alloys for supercritical CO<sub>2</sub> turbines, and it is now being graded.</p>
+      <p>Across these projects I have used a wide range of simulation software and spent many hours in the laboratory. The laboratory is where I found how much I enjoy the point at which a design leaves the screen and is built and tested. I am drawn to work that makes a measurable difference to people, in medical devices and in energy systems alike. I also do not accept a clean-looking result until I understand where its error comes from.</p>
+      <p>I am based in Milton Keynes in the UK. Having lived in Greece, Germany, Qatar and Cyprus, I am comfortable relocating if a role calls for it.</p>
+    </div>
+    <aside class="page-side" aria-label="Facts">
+      <img class="about-photo" src="images/headshot-320.webp" srcset="images/headshot-320.webp 320w" sizes="(min-width: 1024px) 240px, 200px" width="320" height="352"
+           alt="Gerasimos Balatsoukas" loading="lazy" decoding="async">
+      <dl class="facts">
+        <div><dt>Location</dt><dd>Milton Keynes, UK</dd></div>
+        <div><dt>Mobility</dt><dd>Lived in Greece, Germany, Qatar and Cyprus; open to relocation</dd></div>
+        <div><dt>Education</dt><dd>MSc Advanced Mechanical Engineering, Cranfield University, 2025 to 2026, with the thesis awaiting grading and a current average of about 73&nbsp;%.<br>BEng (Hons) Biomedical Engineering, University of Glasgow, 2020 to 2024, upper second class.</dd></div>
+        <div><dt>Languages</dt><dd>English and Greek (native), German (B1)</dd></div>
+        <div><dt>Interests</dt><dd>Kickboxing and freestyle wrestling for seven years, and motorcycle restoration</dd></div>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- EXPERIENCE AND SKILLS                                        -->
+<!-- ============================================================ -->
+<section class="view" id="experience" aria-labelledby="experienceTitle">
+  <h2 class="page-title" id="experienceTitle">Experience</h2>
+  <ol class="timeline">
+    <li class="tl-item">
+      <h3 class="tl-role">Business consulting intern, PwC</h3>
+      <p class="tl-meta mono">Nicosia, Cyprus. June to August 2025.</p>
+      <ul class="tl-points">
+        <li>I worked with the business consulting team on two semi-governmental proposals, in the medical and telecommunications sectors, each worth more than €200,000, and both were won.</li>
+        <li>I helped map the merger of two separate HR departments, drawing on best practice found through research.</li>
+        <li>I researched benchmarks that informed the team’s consulting methods and proposals.</li>
+      </ul>
+    </li>
+    <li class="tl-item">
+      <h3 class="tl-role">Research project, Advanced Research Centre, University of Glasgow</h3>
+      <p class="tl-meta mono">Glasgow, UK. September 2023 to April 2024.</p>
+      <ul class="tl-points">
+        <li>I worked with Dr Oana Dobre on piezoelectric scaffolds for muscle regeneration, the work behind the bioRxiv preprint.</li>
+        <li>I made the fibres, tested them mechanically, imaged them by SEM, and ran the cell culture and differentiation work.</li>
+        <li>I also supported three master’s students and one PhD student who took the investigation further.</li>
+      </ul>
+    </li>
+    <li class="tl-item">
+      <h3 class="tl-role">Data management intern, Fender S.A.</h3>
+      <p class="tl-meta mono">Athens, Greece. June to August 2023.</p>
+      <p class="tl-about">Fender S.A. is a marine insurance and risk management company in the Cambiaso Risso Group.</p>
+      <ul class="tl-points">
+        <li>I consolidated contract data from Europe, the UK, the US, China and the Middle East into the company’s own system, which cut contract generation time by 50&nbsp;%.</li>
+        <li>I corrected errors in the stored records by checking them against the original multinational contracts, which reduced broker mistakes.</li>
+      </ul>
+    </li>
+    <li class="tl-item">
+      <h3 class="tl-role">Intern, Agency for Quality Assurance, Greek Ministry of Health</h3>
+      <p class="tl-meta mono">Athens, Greece. June to August 2022.</p>
+      <ul class="tl-points">
+        <li>I carried out technical checks on hospital equipment, including defibrillators, in Thessaloniki and Chania, assessing whether it was ready for an emergency under ISO 13485.</li>
+        <li>I wrote a report on best practice in nursing staff training, based on statistical analysis of data from the National and Kapodistrian University of Athens.</li>
+        <li>I worked on the “Safe Hospitals” project, which set out directives so that standard operating procedures cover emergencies in every Greek public hospital.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h2 class="page-title page-title-sub" id="skillsTitle">Skills</h2>
+  <p class="skills-caption">Tools and methods I have used in the projects on this site and in my degrees.</p>
+  <div class="skills">
+    <section class="skill-group" aria-labelledby="skCad">
+      <h3 id="skCad">CAD and design</h3>
+      <ul><li>Autodesk Fusion 360</li><li>SolidWorks</li><li>Rendering and animation</li><li>Double Diamond design method</li><li>Cardboard prototyping</li><li>Cost estimation</li></ul>
+    </section>
+    <section class="skill-group" aria-labelledby="skSim">
+      <h3 id="skSim">Simulation</h3>
+      <ul><li>Abaqus</li><li>Ansys Fluent, DesignModeler and ICEM CFD</li><li>Ansys Maxwell and RMxprt</li><li>COMSOL Multiphysics</li><li>MOFEM and Gmsh</li><li>Simulink</li></ul>
+    </section>
+    <section class="skill-group" aria-labelledby="skCode">
+      <h3 id="skCode">Programming and data</h3>
+      <ul><li>Python: TensorFlow, Keras, scikit-image, SciPy, NumPy</li><li>MATLAB</li><li>ImageJ</li><li>HTML and CSS</li><li>R (basic)</li><li>Microsoft 365</li></ul>
+    </section>
+    <section class="skill-group" aria-labelledby="skLab">
+      <h3 id="skLab">Laboratory</h3>
+      <ul><li>Electrospinning</li><li>Mechanical testing and rig design</li><li>SEM imaging</li><li>Optical and confocal microscopy</li><li>Cell culture</li><li>qPCR</li><li>3D and extrusion printing</li><li>O<sub>2</sub> plasma treatment</li></ul>
+    </section>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: CORONARY STENT DESIGN AND EXPANSION MODEL           -->
+<!-- ============================================================ -->
+<section class="view" id="stent" aria-labelledby="stentTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="stentTitle">Coronary stent design and expansion model</h2>
+        <p class="proj-summary">I designed a coronary stent in CAD and modelled its balloon expansion and recoil in Abaqus, so that a geometry can be judged before it is made.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Design and analysis, solo</dd></div>
+          <div><dt>Context</dt><dd>Personal project, undertaken to learn Abaqus</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+          <div><dt>Tools</dt><dd>Fusion 360, Abaqus, nonlinear plasticity</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>&lt; 5&nbsp;%</b><span>mesh-independence error, so the stresses follow the physics rather than the mesh</span></li>
+          <li class="results-plain">Recoil after balloon removal measured in a separate springback step.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead" data-type="image" data-src="images/stent-vonmises.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 1: </span>
+            <img src="images/stent-vonmises.webp" srcset="images/stent-vonmises-800.webp 800w, images/stent-vonmises.webp 1299w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="1299" height="478" alt="Von Mises stress contour on a coronary stent mesh at 75 percent radial expansion" loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 1.</b> Von Mises stress across the stent at 75&nbsp;% radial expansion, the state used as the reference for the analysis.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="stent-problem">
+            <h3 id="stent-problem">The problem</h3>
+            <p>I set this project myself in 2025, to learn Abaqus on a real design question. The geometry of a coronary stent is the main factor in how it performs once deployed. Predicting that behaviour early therefore decides whether a design is worth making. I wanted a model that reproduces implantation, when a balloon expands the stent inside an artery, and that reports both the stress during expansion and the recoil afterwards.</p>
+          </section>
+          <section class="narr" aria-labelledby="stent-work">
+            <h3 id="stent-work">What I did</h3>
+            <p>I built the stent as a parametric model in Fusion 360 and imported it into Abaqus for a nonlinear analysis with plasticity. The material was cobalt-chromium, chosen for its durability, biocompatibility and radiopacity. I assumed frictionless contact at the balloon interface to keep the run tractable. Expansion was solved in stages, with 75&nbsp;% radial expansion as the reference state, and a second step removed the load to capture elastic springback. I refined the mesh to balance accuracy against run time, within the 250,000-node limit of the student licence.</p>
+          </section>
+          <section class="narr" aria-labelledby="stent-outcome">
+            <h3 id="stent-outcome">What came out of it</h3>
+            <p>The solution was mesh-independent to within 5&nbsp;%, which gives confidence that the stresses reflect the physics rather than the mesh. The von Mises results showed the stent deforming almost entirely plastically during expansion. The springback step then measured how much of that deformation recovers once the balloon is withdrawn. Together, these describe the stent in service, and they show that the model can screen geometries before manufacture, where most of the cost and risk sit.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="stent-limits">
+            <h3 id="stent-limits">Limitations and what I would do next</h3>
+            <p>The balloon contact was frictionless and the model has no artery wall, so it describes free expansion rather than deployment in a vessel. The student licence also capped the mesh at 250,000 nodes. Next, I would add an artery model and contact friction, and then compare two or three strut geometries under identical mesh settings.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig" data-type="image" data-src="images/stent-geometry.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 2: </span>
+              <img src="images/stent-geometry.webp" srcset="images/stent-geometry.webp 254w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="254" height="601" alt="Rendered solid model of a coronary stent" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 2.</b> The stent geometry as modelled in Fusion 360.</figcaption>
+          </figure>
+          <figure class="fig wide" data-type="image" data-src="images/stent-recoil.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 3: </span>
+              <img src="images/stent-recoil.webp" srcset="images/stent-recoil-800.webp 800w, images/stent-recoil.webp 1321w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1321" height="478" alt="Stent mesh after elastic springback" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 3.</b> The stent after the balloon load is removed, the state used to measure recoil.</figcaption>
+          </figure>
+          <figure class="fig fig-video" data-type="video" data-src="media/hero-stent.mp4">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Play figure 4: </span>
+              <img src="images/hero-stent-poster.webp" srcset="images/hero-stent-poster.webp 740w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="740" height="462" alt="The stent after expansion and springback" loading="lazy" decoding="async">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            </button>
+            <figcaption><b>Figure 4.</b> The stent expanding under balloon inflation and springing back, coloured by von Mises stress.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it. Clips play when opened.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-next" href="#scaffolds"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Piezoelectric scaffolds for muscle regeneration</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: PIEZOELECTRIC SCAFFOLDS FOR MUSCLE REGENERATION     -->
+<!-- ============================================================ -->
+<section class="view" id="scaffolds" aria-labelledby="scaffoldsTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="scaffoldsTitle">Piezoelectric scaffolds for muscle regeneration</h2>
+        <p class="proj-summary">I fabricated aligned piezoelectric fibre scaffolds, built a rig to test them wet, and showed early signs of muscle cells differentiating on them.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Team project. My part covered fabrication, mechanical testing including the wet rig, biocompatibility and differentiation assays.</dd></div>
+          <div><dt>Context</dt><dd>BEng thesis, Advanced Research Centre, University of Glasgow</dd></div>
+          <div><dt>Year</dt><dd>2023 to 2024</dd></div>
+          <div><dt>Publication</dt><dd><a href="https://doi.org/10.1101/2025.06.19.660455" target="_blank" rel="noopener">Preprint on bioRxiv<span class="sr-only"> (opens in a new tab)</span></a>, in the final stage of review at Small</dd></div>
+          <div><dt>Tools</dt><dd>Electrospinning, mechanical testing, cell culture, SEM, confocal microscopy, 3D printing, O<sub>2</sub> plasma treatment, ImageJ, Python</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>5&nbsp;days</b><span>to clear myosin expression, an early sign that the cells were differentiating into muscle</span></li>
+          <li><b>2nd of 12</b><span>authors on the bioRxiv preprint</span></li>
+          <li class="results-plain">A tensile rig designed and built to test fibres submerged, which the group could not do before.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead" data-type="image" data-src="images/scaffold-fibres.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 1: </span>
+            <img src="images/scaffold-fibres.webp" srcset="images/scaffold-fibres-800.webp 800w, images/scaffold-fibres.webp 1280w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="1280" height="628" alt="Electrospinning set-up beside a rolled fibre construct" loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 1.</b> The electrospinning set-up and a rolled fibre construct, in which aligned PHBV fibres are gathered into a bundle that follows the parallel architecture of skeletal muscle.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="scaffolds-problem">
+            <h3 id="scaffolds-problem">The problem</h3>
+            <p>Patients who lose more than 20&nbsp;% of a muscle’s volume cannot regrow it on their own. This project explores a biodegradable scaffold, implanted at the injury, that guides regrowing muscle back to its original geometry and mechanical behaviour. The scaffold is made from PHBV, a polymer that produces a small electrical charge when it is deformed. That charge recreates the electromechanical environment in which muscle cells normally grow.</p>
+          </section>
+          <section class="narr" aria-labelledby="scaffolds-work">
+            <h3 id="scaffolds-work">What I did</h3>
+            <p>My work covered the whole validation. I produced the fibres by electrospinning, then designed a rolling protocol that gathers them into the aligned, bundled architecture of real muscle. I measured their mechanical properties dry and wet. There was no way to test fibres submerged, so I designed and built the rig. I treated the fibres to change their surface polarity, which improves laminin absorption and cell adherence. Finally, I ran the biocompatibility work and stained for myosin, the protein that marks muscle differentiation.</p>
+          </section>
+          <section class="narr" aria-labelledby="scaffolds-outcome">
+            <h3 id="scaffolds-outcome">What came out of it</h3>
+            <p>Clear myosin expression appeared within 5&nbsp;days, which suggests that the cells were differentiating into muscle on the scaffold rather than only surviving on it. That result depended on the wet rig, since dry data alone would not describe the scaffold once implanted. The findings form part of the preprint “Three-Dimensional Piezoelectric Fibrous Constructs for Muscle Regeneration”, on which I am the second of twelve authors.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="scaffolds-limits">
+            <h3 id="scaffolds-limits">Limitations and what I would do next</h3>
+            <p>The differentiation results are preliminary, as the preprint itself states. They come from in vitro culture of a mouse cell line, C2C12, over a short period. The work did not reach implantation, so questions such as how the scaffold degrades under cyclic load in the body remain open. The investigation has since been taken further by master’s and PhD students.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig" data-type="image" data-src="images/scaffold-fibre-micro.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 2: </span>
+              <img src="images/scaffold-fibre-micro.webp" srcset="images/scaffold-fibre-micro-800.webp 800w, images/scaffold-fibre-micro.webp 1200w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1200" height="1600" alt="A rolled fibre construct seen through a microscope eyepiece" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 2.</b> A single rolled construct under an optical microscope, showing the bundled fibres.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/scaffold-petri.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 3: </span>
+              <img src="images/scaffold-petri.webp" srcset="images/scaffold-petri-800.webp 800w, images/scaffold-petri.webp 1200w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1200" height="1600" alt="Fibre construct in a Petri dish beside a steel ruler" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 3.</b> A finished construct in a dish beside a ruler; it is a few millimetres long.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/scaffold-myosin.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 4: </span>
+              <img src="images/scaffold-myosin.webp" srcset="images/scaffold-myosin-800.webp 800w, images/scaffold-myosin.webp 906w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="906" height="1280" alt="Confocal microscopy panels of cells stained for myosin and nuclei" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 4.</b> C2C12 cells stained for myosin (red) and nuclei (blue) after culture on the scaffold, across the test conditions.</figcaption>
+          </figure>
+          <figure class="fig fig-video" data-type="video" data-src="media/scaffold-rig-dry.mp4">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Play figure 5: </span>
+              <img src="images/scaffold-rig-dry-poster.webp" srcset="images/scaffold-rig-dry-poster.webp 540w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="540" height="960" alt="Custom tensile rig holding a fibre in dry conditions" loading="lazy" decoding="async">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            </button>
+            <figcaption><b>Figure 5.</b> The tensile rig I designed, extending a fibre on a lead-screw stage to measure its properties dry.</figcaption>
+          </figure>
+          <figure class="fig fig-video" data-type="video" data-src="media/scaffold-rig-wet.mp4">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Play figure 6: </span>
+              <img src="images/scaffold-rig-wet-poster.webp" srcset="images/scaffold-rig-wet-poster.webp 540w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="540" height="960" alt="The tensile rig testing a submerged fibre" loading="lazy" decoding="async">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            </button>
+            <figcaption><b>Figure 6.</b> The same rig adapted for wet testing, with the fibre submerged to match conditions in the body.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it. Clips play when opened.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#stent"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Coronary stent design and expansion model</span></a>
+          <a class="pager-link pager-next" href="#generator"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Rare-earth-free wind turbine generator</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: RARE-EARTH-FREE WIND TURBINE GENERATOR              -->
+<!-- ============================================================ -->
+<section class="view" id="generator" aria-labelledby="generatorTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="generatorTitle">Rare-earth-free wind turbine generator</h2>
+        <p class="proj-summary">I validated in Ansys Maxwell a 2&nbsp;MW direct-drive generator, re-designed without rare-earth magnets, and showed that it reaches its rating.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>All Maxwell and RMxprt simulation, and part of the analytical re-design, in a team of four</dd></div>
+          <div><dt>Context</dt><dd>Group project, MSc Advanced Mechanical Engineering, Cranfield University</dd></div>
+          <div><dt>Year</dt><dd>2025 to 2026</dd></div>
+          <div><dt>Tools</dt><dd>Ansys Maxwell, RMxprt, magnetic equivalent circuit</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>2.5&nbsp;MW</b><span>peak output, above the 2&nbsp;MW rating, without rare-earth magnets</span></li>
+          <li><b>92.7&nbsp;%</b><span>electromagnetic efficiency across a wide range of operating angles</span></li>
+          <li class="results-plain">Back-EMF and torque agree with the analytical model.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead fig-video" data-type="video" data-src="media/maxwell-flux-density.mp4">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Play figure 1: </span>
+            <img src="images/maxwell-flux-density-poster.webp" srcset="images/maxwell-flux-density-poster.webp 686w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="686" height="492" alt="Flux density field across the stator and rotor of the generator" loading="lazy" decoding="async">
+            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          </button>
+          <figcaption><b>Figure 1.</b> Flux density as the rotor turns, peaking at about 2.5&nbsp;T in the stator teeth.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="generator-problem">
+            <h3 id="generator-problem">The problem</h3>
+            <p>The wider project asked whether resonant wireless power transfer could supply the rotor excitation of a direct-drive wind turbine generator. That would let the machine drop its rare-earth permanent magnets, together with the slip rings that wear out. My part was the generator. I had to show that a 2&nbsp;MW machine, re-designed with wound rotor excitation in place of the magnets, reaches its rated performance, because the feasibility case fails otherwise.</p>
+          </section>
+          <section class="narr" aria-labelledby="generator-work">
+            <h3 id="generator-work">What I did</h3>
+            <p>I contributed to the analytical re-design, sizing the machine with a magnetic equivalent circuit and reluctance network so that the wound rotor reproduced the field of the permanent-magnet design. I then built and ran all of the electromagnetic finite-element work in Ansys. RMxprt gave the initial geometry and performance sweep, and a 2D transient Maxwell model gave the detailed field solution. The transient model captured saturation in the stator teeth, flux leakage and the start-up of the phase currents, which the analytical work could not.</p>
+          </section>
+          <section class="narr" aria-labelledby="generator-outcome">
+            <h3 id="generator-outcome">What came out of it</h3>
+            <p>The machine reached a peak output of 2.5&nbsp;MW near a torque angle of 100°, and held an electromagnetic efficiency of 92.7&nbsp;% across a wide range of operating angles. Its three-phase back-EMF and electromagnetic torque agreed with the analytical predictions. Hence the electrically excited machine can reach its 2&nbsp;MW rating at an efficiency competitive with the permanent-magnet design it replaces. The rest of the feasibility study depended on that result.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="generator-limits">
+            <h3 id="generator-limits">Limitations and what I would do next</h3>
+            <p>The field solution was two-dimensional, so end-winding and axial effects were not modelled, and the results are from simulation alone. The efficiency is electromagnetic only, so mechanical and converter losses sit outside it. Next, I would run a 3D or coupled thermal check on the stator teeth, where the flux density peaks at about 2.5&nbsp;T.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig fig-video" data-type="video" data-src="media/maxwell-vector-potential.mp4">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Play figure 2: </span>
+              <img src="images/maxwell-vector-potential-poster.webp" srcset="images/maxwell-vector-potential-poster.webp 826w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="826" height="504" alt="Magnetic vector potential field across the machine cross-section" loading="lazy" decoding="async">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            </button>
+            <figcaption><b>Figure 2.</b> Magnetic vector potential over one electrical cycle.</figcaption>
+          </figure>
+          <figure class="fig wide" data-type="image" data-src="images/maxwell-cutaway.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 3: </span>
+              <img src="images/maxwell-cutaway.webp" srcset="images/maxwell-cutaway-800.webp 800w, images/maxwell-cutaway.webp 1226w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1226" height="584" alt="Labelled cutaway of the generator" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 3.</b> The re-designed machine in cutaway: stator, slot windings, air gap, rotor poles, coils and rotor core.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/maxwell-reluctance.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 4: </span>
+              <img src="images/maxwell-reluctance.webp" srcset="images/maxwell-reluctance.webp 456w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="456" height="375" alt="Reluctance network diagram of the generator" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 4.</b> The magnetic equivalent circuit used to size the machine before the finite-element check.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/wpt-feasibility.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 5: </span>
+              <img src="images/wpt-feasibility.webp" srcset="images/wpt-feasibility-800.webp 800w, images/wpt-feasibility.webp 1279w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1279" height="711" alt="Colour map scoring coil designs against air gap and turns" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 5.</b> The wider project team’s analytical sweep of the wireless power transfer coils, scoring designs by air gap and number of turns.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it. Clips play when opened.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#scaffolds"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Piezoelectric scaffolds for muscle regeneration</span></a>
+          <a class="pager-link pager-next" href="#bedtower"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Bed Tower, a bedside power unit</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: BED TOWER, A BEDSIDE POWER UNIT                     -->
+<!-- ============================================================ -->
+<section class="view" id="bedtower" aria-labelledby="bedtowerTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="bedtowerTitle">Bed Tower, a bedside power unit</h2>
+        <p class="proj-summary">In a team of four, we took a household automation brief to a costed bedside unit; my part was the CAD rendering, the animation and the cost evaluation.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>CAD rendering and animation, cost evaluation, in a team of four</dd></div>
+          <div><dt>Context</dt><dd>Component Design module, MSc Advanced Mechanical Engineering, Cranfield University</dd></div>
+          <div><dt>Year</dt><dd>2026</dd></div>
+          <div><dt>Tools</dt><dd>Fusion 360, Double Diamond, cardboard prototyping, cost estimation</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>3</b><span>cardboard models, built to settle the layout and the height</span></li>
+          <li><b>100&nbsp;cm</b><span>final height, chosen after trials at 50, 100 and 120&nbsp;cm</span></li>
+          <li><b>US$9.22</b><span>electronics bill of materials at volume prices</span></li>
+          <li><b>US$52.77</b><span>estimated manufacturing cost per unit, materials plus 10&nbsp;%</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead" data-type="image" data-src="images/bedtower-render.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 1: </span>
+            <img src="images/bedtower-render.webp" srcset="images/bedtower-render-800.webp 800w, images/bedtower-render.webp 1420w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="1420" height="652" alt="Rendered bedside unit with a gooseneck lamp placed beside a king-size bed" loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 1.</b> The final design rendered beside a king-size bed, to check its scale and to show that it works on either side of the bed.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="bedtower-problem">
+            <h3 id="bedtower-problem">The problem</h3>
+            <p>The brief was to create an innovation based on automation in the household. It had to be safe and easy to use, fit the space in a home, need no maintenance, suit its target users and be cost effective. We listed about ten real problems from our own homes, narrowed them to four concepts, and chose bedside power. Our problem statement was that existing bed frames do not support the electrical devices people now keep by the bed, either functionally or attractively.</p>
+          </section>
+          <section class="narr" aria-labelledby="bedtower-work">
+            <h3 id="bedtower-work">What I did</h3>
+            <p>We followed the Double Diamond framework, which suited an open brief better than the Stanford method. A persona, a 30-year-old engineer who has just bought his first home, kept decisions tied to one user. The first concept was an add-on to the bed frame, but frames vary too much, so we returned to the problem statement and pivoted to a standalone unit. A storyboard then added a book holder, a cup holder and better drawers. Cardboard models tested beside a bed set the height at 100&nbsp;cm. My part was the CAD rendering and animation and the cost evaluation.</p>
+          </section>
+          <section class="narr" aria-labelledby="bedtower-outcome">
+            <h3 id="bedtower-outcome">What came out of it</h3>
+            <p>The final design is 1000&nbsp;mm tall, 350&nbsp;mm wide and 250&nbsp;mm deep. It carries a gooseneck lamp, a UK socket, USB-A and USB-C ports, wireless charging and drawers, in a polymer-coated recycled plywood body on an aluminium frame. Rendering it beside a king-size bed showed that it suits either side of the bed, and also exposed a limit: the lamp does not reach across a very wide bed. My costing put the electronics at US$9.22 and the whole unit at US$52.77, whereas bedside tables can sell for more than US$300.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="bedtower-limits">
+            <h3 id="bedtower-limits">Limitations and what I would do next</h3>
+            <p>The costing is a first estimate built from supplier unit prices, not a quotation. The unit has not been built as a working prototype or tested for safety, load or lifespan. In hindsight, the concept also drifted towards a multi-function product rather than answering the automation brief tightly. Next would come user tests across bedroom layouts and bed heights, a manufacturability review with bulk pricing, and a full prototype.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig" data-type="image" data-src="images/bedtower.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 2: </span>
+              <img src="images/bedtower.webp" srcset="images/bedtower-800.webp 800w, images/bedtower.webp 1600w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1600" height="1468" alt="Render of the bedside unit with a close-up of its front panel" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 2.</b> The final design with its reading lamp, UK socket, USB ports and wireless charging pad, and a detail of the front panel.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/bedtower-dimensions.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 3: </span>
+              <img src="images/bedtower-dimensions.webp" srcset="images/bedtower-dimensions-800.webp 800w, images/bedtower-dimensions.webp 900w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="900" height="810" alt="Front and side drawings of the unit with dimensions" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 3.</b> The principal dimensions: 1000&nbsp;mm tall, 350&nbsp;mm wide and 250&nbsp;mm deep.</figcaption>
+          </figure>
+          <figure class="fig wide fig-video" data-type="video" data-src="media/bedtower.mp4">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Play figure 4: </span>
+              <img src="images/bedtower-clip-poster.webp" srcset="images/bedtower-clip-poster-800.webp 800w, images/bedtower-clip-poster.webp 1280w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1280" height="524" alt="Exploded view of the bedside unit with its drawers open and electrical parts separated" loading="lazy" decoding="async">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            </button>
+            <figcaption><b>Figure 4.</b> An exploded-view animation of the final design, which I produced: the drawers open and the electrical parts move out of the body.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it. Clips play when opened.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#generator"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Rare-earth-free wind turbine generator</span></a>
+          <a class="pager-link pager-next" href="#cfd"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">NACA 4412 aerofoil with a Gurney flap</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: NACA 4412 AEROFOIL WITH A GURNEY FLAP               -->
+<!-- ============================================================ -->
+<section class="view" id="cfd" aria-labelledby="cfdTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="cfdTitle">NACA 4412 aerofoil with a Gurney flap</h2>
+        <p class="proj-summary">I measured in Fluent how a Gurney flap trades extra lift against extra drag on a NACA 4412 section for vertical-axis wind turbines.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Individual</dd></div>
+          <div><dt>Context</dt><dd>Computational Fluid Dynamics for Renewable Energy module, MSc Advanced Mechanical Engineering, Cranfield University</dd></div>
+          <div><dt>Year</dt><dd>2025 to 2026</dd></div>
+          <div><dt>Tools</dt><dd>Ansys ICEM CFD, Ansys Fluent, k-omega SST</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>0.037&nbsp;%</b><span>grid convergence index on the lift coefficient</span></li>
+          <li><b>+79&nbsp;%</b><span>lift coefficient with the Gurney flap, at most</span></li>
+          <li><b>+96&nbsp;%</b><span>drag with the flap, at most, which is the penalty that decides the trade-off</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead" data-type="image" data-src="images/naca-velocity.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 1: </span>
+            <img src="images/naca-velocity.webp" srcset="images/naca-velocity-800.webp 800w, images/naca-velocity.webp 1010w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="1010" height="231" alt="Velocity magnitude contour around the aerofoil and Gurney flap" loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 1.</b> Velocity magnitude around the section with the Gurney flap; the wake behind the trailing edge is visibly thicker.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="cfd-problem">
+            <h3 id="cfd-problem">The problem</h3>
+            <p>Vertical-axis wind turbines work in low, gusty urban wind, so their blade sections need all the lift they can get. I first quantified the lift and drag of a baseline NACA 4412 section. I then tested a passive modification, a Gurney flap, which is a small tab at the trailing edge. The flap raises lift but also raises drag, and on a turbine any extra drag is power that is never generated. The question is therefore one of tuning rather than simple improvement.</p>
+          </section>
+          <section class="narr" aria-labelledby="cfd-work">
+            <h3 id="cfd-work">What I did</h3>
+            <p>I built the geometry and a structured C-mesh in Ansys ICEM, with the domain extended to 20 chord lengths. The leading-edge blocks were converted to splines to keep cells orthogonal where the curvature is sharpest. Wall cells were sized for a y+ of 1, and mesh quality was checked against accepted angle and determinant limits. I solved the flow in Fluent with the k-omega SST model at a 10° angle of attack, for free-stream speeds of 3 and 15&nbsp;m/s. A mesh study, scaling the element count by √2 at each step, settled on 78,000 elements.</p>
+          </section>
+          <section class="narr" aria-labelledby="cfd-outcome">
+            <h3 id="cfd-outcome">What came out of it</h3>
+            <p>The grid convergence index on the lift coefficient was 0.037&nbsp;%, so the comparison rests on the physics rather than on the mesh. The Gurney flap raised the lift coefficient by up to 79&nbsp;%. However, it raised drag by up to 96&nbsp;%, by thickening the wake behind the trailing edge. The design conclusion is that flap length must be tuned to where the lift gain still outweighs the drag penalty. That balance sets the net torque and power of a real turbine.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="cfd-limits">
+            <h3 id="cfd-limits">Limitations and what I would do next</h3>
+            <p>The study was two-dimensional and used a single 10° angle of attack, whereas a vertical-axis blade passes through a full range of angles in every rotation. Next, I would sweep flap length and angle of attack together, then carry the results into a rotating-blade model to find the flap length that gives the most net torque.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig" data-type="image" data-src="images/naca-mesh.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 2: </span>
+              <img src="images/naca-mesh.webp" srcset="images/naca-mesh.webp 738w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="738" height="481" alt="Structured C-shaped mesh around a NACA 4412 aerofoil" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 2.</b> The structured C-mesh, refined near the surface to a y+ of about 1.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#bedtower"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Bed Tower, a bedside power unit</span></a>
+          <a class="pager-link pager-next" href="#biosensor"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Paper microfluidic creatinine sensor</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: PAPER MICROFLUIDIC CREATININE SENSOR                -->
+<!-- ============================================================ -->
+<section class="view" id="biosensor" aria-labelledby="biosensorTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="biosensorTitle">Paper microfluidic creatinine sensor</h2>
+        <p class="proj-summary">I designed paper microfluidic channels for a colour-change creatinine test and tuned their timing in simulation before building paper prototypes.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Individual</dd></div>
+          <div><dt>Context</dt><dd>BEng Biomedical Engineering, University of Glasgow</dd></div>
+          <div><dt>Year</dt><dd>2024</dd></div>
+          <div><dt>Tools</dt><dd>MOFEM, Gmsh, Python, paper prototyping</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>68&nbsp;s</b><span>stain arrival in the first design, far too early</span></li>
+          <li><b>152&nbsp;s</b><span>stain arrival in the third design, after an overcorrection to 240&nbsp;s in the second</span></li>
+          <li class="results-plain">Narrower channels flowed faster in the paper prototypes, as the simulation predicted.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="lead lead-strip">
+          <div class="strip">
+            <figure class="fig strip-item" data-type="image" data-src="images/biosensor-star.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 1a: </span>
+                <img src="images/biosensor-star.webp" srcset="images/biosensor-star.webp 329w" sizes="(min-width: 1180px) 300px, 33vw" width="329" height="310" alt="Simulated capillary flow through the composite star channel design" loading="lazy" decoding="async">
+              </button>
+              <figcaption>(a) Composite star</figcaption>
+            </figure>
+            <figure class="fig strip-item" data-type="image" data-src="images/biosensor-multichamber.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 1b: </span>
+                <img src="images/biosensor-multichamber.webp" srcset="images/biosensor-multichamber.webp 407w" sizes="(min-width: 1180px) 300px, 33vw" width="407" height="309" alt="Fluid front advancing through a four-chamber redesign" loading="lazy" decoding="async">
+              </button>
+              <figcaption>(b) Four-chamber redesign</figcaption>
+            </figure>
+            <figure class="fig strip-item" data-type="image" data-src="images/biosensor-branching.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 1c: </span>
+                <img src="images/biosensor-branching.webp" srcset="images/biosensor-branching.webp 425w" sizes="(min-width: 1180px) 300px, 33vw" width="425" height="303" alt="Branching channel redesign under the same flow simulation" loading="lazy" decoding="async">
+              </button>
+              <figcaption>(c) Branching redesign</figcaption>
+            </figure>
+          </div>
+          <figcaption><b>Figure 1.</b> Simulated capillary flow in three channel designs: (a) the composite star, (b) a four-chamber redesign in which the reagents meet in the centre, and (c) a branching redesign.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="biosensor-problem">
+            <h3 id="biosensor-problem">The problem</h3>
+            <p>Creatinine in blood rises when the kidneys stop clearing waste properly, so a cheap paper test for it is useful. The device works by colour: sample, buffer, enzyme and stain wick through paper channels, mix and react to give a reading. The difficult part is timing, because the stain has to meet the reacted sample inside a narrow window. The real design task is therefore to shape the channels so that each reagent arrives at the right moment.</p>
+          </section>
+          <section class="narr" aria-labelledby="biosensor-work">
+            <h3 id="biosensor-work">What I did</h3>
+            <p>I simulated capillary flow through the paper in MOFEM, building each channel geometry in Gmsh and running the transient flow from Python. That let me watch the fluid front advance and see when each reagent reached the mixing zone. I started with simple shapes to understand isotropic and anisotropic spreading, then designed my own multi-chamber layouts and reshaped them after each run. Finally, I made the designs as paper prototypes and recorded the colour change with a phone camera for comparison with the simulations.</p>
+          </section>
+          <section class="narr" aria-labelledby="biosensor-outcome">
+            <h3 id="biosensor-outcome">What came out of it</h3>
+            <p>Simulating first let me tune the timing before building anything. The first design brought the stain in far too early, at about 68&nbsp;s, and the second overcorrected to 240&nbsp;s. The third reached about 152&nbsp;s as the channels closed in on the target. The paper prototypes confirmed the main trend, with narrower channels giving faster flow. The design lesson was that every added geometric feature made the flow harder to predict, so the timing had to be earned through iteration.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="biosensor-limits">
+            <h3 id="biosensor-limits">Limitations and what I would do next</h3>
+            <p>The prototypes were recorded with a phone camera rather than a calibrated reader, and they confirmed the flow trend rather than the exact timings. Next, I would measure the colour change quantitatively and test the third design against samples of known creatinine concentration.</p>
+          </section>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#cfd"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">NACA 4412 aerofoil with a Gurney flap</span></a>
+          <a class="pager-link pager-next" href="#forecast"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Half-hourly electricity demand forecasting</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: HALF-HOURLY ELECTRICITY DEMAND FORECASTING          -->
+<!-- ============================================================ -->
+<section class="view" id="forecast" aria-labelledby="forecastTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="forecastTitle">Half-hourly electricity demand forecasting</h2>
+        <p class="proj-summary">I built a CNN-LSTM and gradient-boosting ensemble to forecast the electricity demand of a UK region at 30&nbsp;min resolution, 20 steps ahead.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Individual</dd></div>
+          <div><dt>Context</dt><dd>Artificial Intelligence for Sustainability module, MSc Advanced Mechanical Engineering, Cranfield University</dd></div>
+          <div><dt>Year</dt><dd>2025</dd></div>
+          <div><dt>Tools</dt><dd>Python, TensorFlow and Keras, gradient boosting, Bayesian optimisation</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>22.6</b><span>RMSE on a one-day backtest for 23 September 2025, which is 3.8&nbsp;% of mean demand</span></li>
+          <li><b>90 / 10</b><span>time-ordered split between training and test data, so no future data leaks into training</span></li>
+          <li><b>20 steps</b><span>forecast at 30&nbsp;min resolution, from 00:00 to 09:30 on 30 September 2025</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead" data-type="image" data-src="images/ai-error-heatmap.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 1: </span>
+            <img src="images/ai-error-heatmap.webp" srcset="images/ai-error-heatmap-800.webp 800w, images/ai-error-heatmap.webp 1234w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="1234" height="424" alt="Heat map of mean absolute forecast error by weekday and half-hour" loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 1.</b> Mean absolute error by day of the week and time of day; the error rises where demand changes direction, around 09:30 and 17:00.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="forecast-problem">
+            <h3 id="forecast-problem">The problem</h3>
+            <p>The module asked for a model that forecasts the half-hourly electricity demand of a UK region for the 20 steps from 00:00 to 09:30 on 30 September 2025. Five years of history were provided, and accuracy was judged by RMSE against the real demand. The raw series was not clean. It contained short outages and isolated spikes, as well as a flat period of nearly two months in summer 2024 that could not be physically real.</p>
+          </section>
+          <section class="narr" aria-labelledby="forecast-work">
+            <h3 id="forecast-work">What I did</h3>
+            <p>I kept the outages and the flat period in the series, but marked them with indicator features and down-weighted them in training. Spikes were flagged with a z-score test. I added time, calendar and lagged features, including cyclical encodings, UK public holidays and a flag for the first Covid period. The data were split in time order, 90&nbsp;% for training and 10&nbsp;% for testing. The forecast came from an ensemble weighted by validation error: a CNN-LSTM network for the short horizon and gradient boosting for the longer one. Bayesian optimisation tuned the hyperparameters.</p>
+          </section>
+          <section class="narr" aria-labelledby="forecast-outcome">
+            <h3 id="forecast-outcome">What came out of it</h3>
+            <p>On a one-day backtest for 23 September 2025, a week before the target date, the model reached an RMSE of 22.6, which is 3.8&nbsp;% of mean demand. It follows the overall shape of demand and its changes of gradient well. The error heat map shows where it struggles: around 09:30 and 17:00, when demand turns, and on Tuesdays, the weekday being forecast. The forward forecast shows the expected overnight rise, then a dip and a morning peak near 06:30.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="forecast-limits">
+            <h3 id="forecast-limits">Limitations and what I would do next</h3>
+            <p>The model smooths local peaks and troughs and lags short oscillations, which is a known behaviour of LSTM-based models. Its residuals also lean positive, so it tends to under-predict. Next, I would target the difficult time windows with better features and sample weighting, and average several training runs to reduce the variation between forecasts.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig wide" data-type="image" data-src="images/ai-demand-prediction.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 2: </span>
+              <img src="images/ai-demand-prediction.webp" srcset="images/ai-demand-prediction-800.webp 800w, images/ai-demand-prediction.webp 975w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="975" height="310" alt="Line chart of predicted and actual demand over two days" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 2.</b> The ensemble prediction against actual demand over the last two days of the test set.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/ai-actual-vs-predicted.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 3: </span>
+              <img src="images/ai-actual-vs-predicted.webp" srcset="images/ai-actual-vs-predicted.webp 891w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="891" height="839" alt="Scatter plot of actual against predicted demand with the ideal line" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 3.</b> Actual against predicted demand across the test set; the points spread furthest from the ideal line at the extremes.</figcaption>
+          </figure>
+          <figure class="fig wide" data-type="image" data-src="images/ai-demand-forecast.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 4: </span>
+              <img src="images/ai-demand-forecast.webp" srcset="images/ai-demand-forecast-800.webp 800w, images/ai-demand-forecast.webp 975w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="975" height="310" alt="Line chart of the forecast demand over 20 half-hour steps" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 4.</b> The 20-step forecast for 00:00 to 09:30 on 30 September 2025.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#biosensor"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Paper microfluidic creatinine sensor</span></a>
+          <a class="pager-link pager-next" href="#drug"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Drug release from a spherical carrier</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: DRUG RELEASE FROM A SPHERICAL CARRIER               -->
+<!-- ============================================================ -->
+<section class="view" id="drug" aria-labelledby="drugTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="drugTitle">Drug release from a spherical carrier</h2>
+        <p class="proj-summary">I modelled drug diffusion out of a spherical carrier in COMSOL and traced a false early release to the mesh rather than the physics.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Individual</dd></div>
+          <div><dt>Context</dt><dd>BEng Biomedical Engineering, University of Glasgow</dd></div>
+          <div><dt>Year</dt><dd>2022</dd></div>
+          <div><dt>Tools</dt><dd>COMSOL Multiphysics, Transport of Diluted Species, mesh convergence</dd></div>
+        </dl>
+        <ul class="results">
+          <li><b>&lt; 5&nbsp;%</b><span>start-point error after mesh refinement, down from an offset of 0.19 at t = 0</span></li>
+          <li class="results-plain">The offset was traced to faceting of the sphere by a coarse mesh.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="proj-body">
+        <figure class="fig lead" data-type="image" data-src="images/drug-1hour.webp">
+          <button class="fig-thumb" type="button">
+            <span class="sr-only">Enlarge figure 1: </span>
+            <img src="images/drug-1hour.webp" srcset="images/drug-1hour-800.webp 800w, images/drug-1hour.webp 940w" sizes="(min-width: 1180px) 906px, calc(100vw - 48px)" width="940" height="630" alt="Concentration field in a spherical carrier after one hour" loading="lazy" decoding="async">
+          </button>
+          <figcaption><b>Figure 1.</b> Concentration after one hour, with the drug diffused outwards in a radial gradient.</figcaption>
+        </figure>
+      <div class="proj-more">
+          <section class="narr" aria-labelledby="drug-problem">
+            <h3 id="drug-problem">The problem</h3>
+            <p>Controlled-release implants and particles depend on how quickly a drug leaves its carrier, because the release profile sets the dose a patient receives over time. I modelled a monolithic sphere loaded with drug and wrapped in a thin film. The questions were how fast the drug leaves and how the release rate depends on the design. The same problem sits behind many drug delivery devices, which made it a good test of a modelling workflow.</p>
+          </section>
+          <section class="narr" aria-labelledby="drug-work">
+            <h3 id="drug-work">What I did</h3>
+            <p>I built the sphere in COMSOL and used the Transport of Diluted Species interface to model the drug as a diffusing species. A perfect-sink boundary stood for tissue that removes the drug as fast as it arrives. I ran a time-dependent study to one hour and tracked the concentration field and the cumulative release. Because the geometry is symmetric, I used 1D line profiles as a quick check against the full 3D field before trusting the result.</p>
+          </section>
+          <section class="narr" aria-labelledby="drug-outcome">
+            <h3 id="drug-outcome">What came out of it</h3>
+            <p>The release curve read about 0.19 at time zero, where it should read zero. Rather than ignore it, I traced it to the mesh: a coarse mesh represents the sphere as a faceted surface, which misplaces the boundary. Refining the mesh in steps shrank the offset, and at a very fine mesh the start-point error fell below 5&nbsp;%. That confirmed the cause was numerical. The lasting outcome was a habit of not accepting a clean-looking result until I understand where its error comes from.</p>
+          </section>
+          <section class="narr narr-limits" aria-labelledby="drug-limits">
+            <h3 id="drug-limits">Limitations and what I would do next</h3>
+            <p>A perfect sink is an idealisation of tissue, and the model was not compared with measured release data. The start-point error was reduced rather than removed. Next, I would mesh the sphere with curved second-order elements and compare the release curve with the analytical solution for diffusion from a sphere.</p>
+          </section>
+          <div class="figs">
+          <figure class="fig" data-type="image" data-src="images/drug-start.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 2: </span>
+              <img src="images/drug-start.webp" srcset="images/drug-start-800.webp 800w, images/drug-start.webp 918w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="918" height="630" alt="Concentration field with the drug held in the core of the sphere" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 2.</b> Concentration at t = 0, with the drug confined to the core.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/drug-3d-slices.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 3: </span>
+              <img src="images/drug-3d-slices.webp" srcset="images/drug-3d-slices-800.webp 800w, images/drug-3d-slices.webp 925w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="925" height="635" alt="Multi-slice 3D view of the concentration field" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 3.</b> The diffused state shown as several 3D slices.</figcaption>
+          </figure>
+          <figure class="fig" data-type="image" data-src="images/drug-setup.webp">
+            <button class="fig-thumb" type="button">
+              <span class="sr-only">Enlarge figure 4: </span>
+              <img src="images/drug-setup.webp" srcset="images/drug-setup.webp 750w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="750" height="580" alt="Spherical carrier geometry in the modelling software" loading="lazy" decoding="async">
+            </button>
+            <figcaption><b>Figure 4.</b> The spherical carrier model set up in COMSOL.</figcaption>
+          </figure>
+          </div>
+          <p class="figs-note">Select a figure to enlarge it.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#forecast"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Half-hourly electricity demand forecasting</span></a>
+          <a class="pager-link pager-next" href="#cad"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">CAD modelling and rendering</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: CAD MODELLING AND RENDERING                         -->
+<!-- ============================================================ -->
+<section class="view" id="cad" aria-labelledby="cadTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="cadTitle">CAD modelling and rendering</h2>
+        <p class="proj-summary">Two products modelled and rendered in Fusion 360, a BMX bicycle and a prosthetic leg.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Individual</dd></div>
+          <div><dt>Context</dt><dd>Personal modelling work</dd></div>
+          <div><dt>Tools</dt><dd>Autodesk Fusion 360, rendering</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="proj-body">
+      <div class="lead lead-sub">
+        <section class="sub" aria-labelledby="cad-bmx-bicycle">
+          <h3 id="cad-bmx-bicycle">BMX bicycle</h3>
+          <div class="figs">
+            <figure class="fig wide" data-type="image" data-src="images/cad-bmx.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 1: </span>
+                <img src="images/cad-bmx.webp" srcset="images/cad-bmx-800.webp 800w, images/cad-bmx.webp 1536w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1536" height="525" alt="Photorealistic render of a BMX bicycle" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 1.</b> A rendered view of the BMX bicycle assembly.</figcaption>
+            </figure>
+          </div>
+          <p>I modelled a complete BMX bicycle as one parametric assembly, covering the frame, drivetrain, wheels and controls, and rendered it photorealistically.</p>
+        </section>
+      </div>
+      <div class="proj-more">
+        <section class="sub" aria-labelledby="cad-prosthetic-leg">
+          <h3 id="cad-prosthetic-leg">Prosthetic leg</h3>
+          <div class="figs">
+            <figure class="fig wide" data-type="image" data-src="images/cad-prosthetic-front.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 2: </span>
+                <img src="images/cad-prosthetic-front.webp" srcset="images/cad-prosthetic-front-800.webp 800w, images/cad-prosthetic-front.webp 1134w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1134" height="517" alt="Front view render of a prosthetic leg" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 2.</b> The prosthetic leg from the front.</figcaption>
+            </figure>
+            <figure class="fig wide" data-type="image" data-src="images/cad-prosthetic-side.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 3: </span>
+                <img src="images/cad-prosthetic-side.webp" srcset="images/cad-prosthetic-side-800.webp 800w, images/cad-prosthetic-side.webp 1536w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1536" height="525" alt="Side view render of a prosthetic leg with a curved blade foot" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 3.</b> The prosthetic leg from the side, showing the profile of the blade foot.</figcaption>
+            </figure>
+          </div>
+          <p>I modelled a prosthetic leg with a contoured socket and a sprint-blade foot, applying the same CAD and rendering workflow to a biomedical product.</p>
+        </section>
+          <p class="figs-note">Select a figure to enlarge it.</p>
+        <p class="proj-note">The Bed Tower, designed in the Component Design module, has <a href="#bedtower">its own page</a>.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#drug"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">Drug release from a spherical carrier</span></a>
+          <a class="pager-link pager-next" href="#python"><span class="pager-label">Next project<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span><span class="pager-title">Python coursework</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROJECT: PYTHON COURSEWORK                                   -->
+<!-- ============================================================ -->
+<section class="view" id="python" aria-labelledby="pythonTitle">
+  <a class="proj-back" href="#work"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>All projects</a>
+
+  <div class="proj-layout">
+    <div class="proj-rail">
+      <header class="proj-head">
+        <h2 class="proj-title" id="pythonTitle">Python coursework</h2>
+        <p class="proj-summary">Coursework in image classification, image analysis and signal processing, and a set of data charts.</p>
+      </header>
+      <div class="proj-facts">
+        <dl class="meta">
+          <div><dt>Role</dt><dd>Individual</dd></div>
+          <div><dt>Context</dt><dd>Separate Python projects in machine learning, computer vision, signal processing and data visualisation</dd></div>
+          <div><dt>Tools</dt><dd>Python, TensorFlow and Keras, scikit-image, SciPy, NumPy, Matplotlib</dd></div>
+        </dl>
+        <p class="proj-note">The demand forecasting project has <a href="#forecast">its own page</a>.</p>
+      </div>
+    </div>
+
+    <div class="proj-body">
+      <div class="lead lead-sub">
+        <section class="sub" aria-labelledby="python-cifar-10-image-classification">
+          <h3 id="python-cifar-10-image-classification">CIFAR-10 image classification</h3>
+          <p class="sub-context">Deep learning coursework, TensorFlow and Keras.</p>
+          <div class="figs">
+            <figure class="fig wide" data-type="image" data-src="images/python-cnn-training.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 1: </span>
+                <img src="images/python-cnn-training.webp" srcset="images/python-cnn-training-800.webp 800w, images/python-cnn-training.webp 1440w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1440" height="674" alt="Accuracy and loss curves over 20 epochs for the convolutional model" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 1.</b> Training and validation curves for the convolutional model, which ends near 77&nbsp;% validation accuracy.</figcaption>
+            </figure>
+          </div>
+          <ul class="results">
+            <li><b>77&nbsp;%</b><span>validation accuracy, convolutional network</span></li>
+            <li><b>55&nbsp;%</b><span>validation accuracy, network trained on PCA-reduced inputs</span></li>
+            <li><b>52&nbsp;%</b><span>validation accuracy, fully connected network</span></li>
+          </ul>
+          <p>I built and compared three classifiers for the CIFAR-10 image set: a fully connected network, a convolutional network and a network trained on PCA-reduced inputs. The convolutional model reached a validation accuracy of about 77&nbsp;%, against about 52&nbsp;% for the dense network and 55&nbsp;% for the PCA version. The gap shows how much convolution helps when the spatial structure of an image matters.</p>
+        </section>
+      </div>
+      <div class="proj-more">
+        <section class="sub" aria-labelledby="python-image-segmentation-and-object-counting">
+          <h3 id="python-image-segmentation-and-object-counting">Image segmentation and object counting</h3>
+          <p class="sub-context">Image analysis coursework, scikit-image, SciPy and NumPy.</p>
+          <div class="figs">
+            <figure class="fig" data-type="image" data-src="images/python-image-processing.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 2: </span>
+                <img src="images/python-image-processing.webp" srcset="images/python-image-processing-800.webp 800w, images/python-image-processing.webp 1296w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1296" height="792" alt="Colour channels, a downsampled image and intensity histograms" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 2.</b> A test image split into colour channels, downsampled and summarised in intensity histograms.</figcaption>
+            </figure>
+          </div>
+          <p>Two pieces of computer vision work. The first separates an image into its colour channels, downsamples it and plots intensity histograms to show how it is made up. The second is a segmentation pipeline that thresholds an image and cleans the masks with morphological opening and closing. It then labels connected regions to count the objects and find their centroids.</p>
+        </section>
+        <section class="sub" aria-labelledby="python-filter-design-for-biosignals">
+          <h3 id="python-filter-design-for-biosignals">Filter design for biosignals</h3>
+          <p class="sub-context">Signal Processing of Biosignatures module, University of Glasgow.</p>
+          <div class="figs">
+            <figure class="fig wide" data-type="image" data-src="images/dsp-fft.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 3: </span>
+                <img src="images/dsp-fft.webp" srcset="images/dsp-fft-800.webp 800w, images/dsp-fft.webp 1040w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1040" height="520" alt="Amplitude spectrum with peaks at 50 and 120 hertz" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 3.</b> Single-sided amplitude spectrum, with the 50&nbsp;Hz and 120&nbsp;Hz tones recovered from the noise.</figcaption>
+            </figure>
+            <figure class="fig wide" data-type="image" data-src="images/dsp-filter.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 4: </span>
+                <img src="images/dsp-filter.webp" srcset="images/dsp-filter-800.webp 800w, images/dsp-filter.webp 1040w" sizes="(min-width: 1180px) 906px, (min-width: 760px) 66vw, 100vw" width="1040" height="520" alt="Frequency response of two windowed low-pass filters" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 4.</b> Response of an FIR low-pass filter with Hamming and Hann windows.</figcaption>
+            </figure>
+          </div>
+          <p>Frequency-domain analysis and filter design in Python. I used the discrete Fourier transform to recover known tones buried in noise, then designed and compared FIR and IIR filters for low-pass, high-pass and band-pass cases. The FIR designs used Hamming and Hann windows, and the IIR designs used Butterworth and Chebyshev forms.</p>
+        </section>
+        <section class="sub" aria-labelledby="python-uk-healthcare-expenditure-charts">
+          <h3 id="python-uk-healthcare-expenditure-charts">UK healthcare expenditure charts</h3>
+          <p class="sub-context">Data visualisation coursework, BEng Biomedical Engineering, University of Glasgow.</p>
+          <div class="figs">
+            <figure class="fig" data-type="image" data-src="images/health-shares.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 5: </span>
+                <img src="images/health-shares.webp" srcset="images/health-shares-800.webp 800w, images/health-shares.webp 1600w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1600" height="1000" alt="Line chart of public and private shares of UK health spending, 1997 to 2013" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 5.</b> Public and private shares of UK healthcare expenditure, 1997 to 2013, on a broken axis.</figcaption>
+            </figure>
+            <figure class="fig" data-type="image" data-src="images/health-spend.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 6: </span>
+                <img src="images/health-spend.webp" srcset="images/health-spend-800.webp 800w, images/health-spend.webp 1600w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1600" height="1000" alt="Grouped bar chart of public and private health spending by year, 1997 to 2013" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 6.</b> Public and private healthcare expenditure in absolute terms, in billions of pounds.</figcaption>
+            </figure>
+            <figure class="fig" data-type="image" data-src="images/health-household.webp">
+              <button class="fig-thumb" type="button">
+                <span class="sr-only">Enlarge figure 7: </span>
+                <img src="images/health-household.webp" srcset="images/health-household-800.webp 800w, images/health-household.webp 1600w" sizes="(min-width: 1180px) 445px, (min-width: 760px) 33vw, (min-width: 480px) 50vw, 100vw" width="1600" height="1000" alt="Bar chart of household health spending in 2013, ranked by type of service" loading="lazy" decoding="async">
+              </button>
+              <figcaption><b>Figure 7.</b> Household healthcare spending in 2013, by type of service.</figcaption>
+            </figure>
+          </div>
+          <p>Three charts of UK healthcare spending, re-plotted for this site in one consistent style from the Office for National Statistics tables. A broken-axis line chart shows the public and private shares from 1997 to 2013, which move as mirror images. The public share rose by 2.5 percentage points between 2007 and 2009, partly because the recession reduced private spending. A grouped bar chart shows the same split in absolute terms, and a bar chart ranks household spending in 2013 by type of service. The original assignment used a pie chart for that last breakdown, but seven categories are easier to compare as bars.</p>
+        </section>
+          <p class="figs-note">Select a figure to enlarge it.</p>
+        <nav class="proj-pager" aria-label="More projects">
+          <a class="pager-link pager-prev" href="#cad"><span class="pager-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Previous project</span><span class="pager-title">CAD modelling and rendering</span></a>
+          <a class="pager-all" href="#work">All projects</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="footer">
+  <div class="inner">
+    <div>
+      <p class="f-name" translate="no">Gerasimos Balatsoukas</p>
+      <p class="f-note">Last updated 17 September 2026. Plain HTML and CSS, with no frameworks and no tracking.</p>
+    </div>
+    <ul class="f-links">
+      <li><a href="mailto:balatsoukas.gerasimos@gmail.com">balatsoukas.gerasimos@gmail.com</a></li>
+      <li>UK <a href="tel:+447565147362">+44 7565 147362</a></li>
+      <li>GR <a href="tel:+306982822545">+30 6982 822545</a></li>
+      <li><a href="https://www.linkedin.com/in/gerasimos-balatsoukas-234525313" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></li>
+      <li><a href="https://doi.org/10.1101/2025.06.19.660455" target="_blank" rel="noopener">bioRxiv preprint<span class="sr-only"> (opens in a new tab)</span></a></li>
+    </ul>
+    <button class="btn btn-ghost no-print" type="button" data-print>Save as PDF</button>
+  </div>
+</footer>
+
+<!-- ====================== LIGHTBOX ====================== -->
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged figure" hidden>
+  <button class="lb-close" type="button" aria-label="Close figure">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <button class="lb-nav lb-prev" type="button" aria-label="Previous figure" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="lb-nav lb-next" type="button" aria-label="Next figure" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="lb-content"></div>
+  <p class="lb-cap"></p>
+  <p class="lb-count" aria-live="polite"></p>
+</div>
+
+<!-- ====================== SCRIPT ======================
+     Loaded at the end of <body>, so every element it looks up already
+     exists when it runs. Plain JavaScript, safe to edit. -->
+<script src="js/site.js"></script>
+</body>
+</html>

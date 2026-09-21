@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--
+  GitHub Pages shows this page for any address on the site that does not
+  exist, at any depth (for example /projects/stent). Relative links would then
+  point to the wrong folder, so once SITE_URL is set the small script below
+  adds a <base> element and every link, style and font loads from the site's
+  own address. While SITE_URL is still the placeholder no <base> is added,
+  so the page also works when opened from the folder.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found | Gerasimos Balatsoukas</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f4f7f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1a1e" media="(prefers-color-scheme: dark)">
+<script>
+(function(){
+  var site = 'https://site-url.example/';
+  var base = site.indexOf('site-url.example') === -1 ? '<base href="' + site + '">' : '';
+  /* written by the script, not as plain tags, so the browser cannot fetch
+     them from the wrong folder before the base address is known */
+  document.write(base + '<link rel="stylesheet" href="css/site.css">');
+  if(location.protocol !== 'file:'){
+    document.write('<link rel="preload" href="fonts/archivo/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>');
+  }
+  try{
+    var saved = localStorage.getItem('theme');
+    if(saved === 'light' || saved === 'dark'){
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  }catch(e){ /* private browsing can block localStorage; fall back to system */ }
+})();
+</script>
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<noscript><link rel="stylesheet" href="css/site.css"></noscript>
+<style>
+  /* the only layout this page needs beyond css/site.css: the footer sits at
+     the bottom of the window however short the page is */
+  body{min-height:100vh;display:flex;flex-direction:column;}
+  .notfound{
+    flex:1 0 auto;width:100%;max-width:var(--maxw);margin:0 auto;
+    padding:clamp(48px,10vw,120px) var(--gutter) clamp(64px,10vw,120px);
+  }
+  .notfound h1{
+    font-size:clamp(30px,4.4vw,52px);font-weight:750;line-height:1.08;
+    letter-spacing:-.02em;color:var(--ink);margin:0;max-width:18em;
+  }
+  .notfound p{margin:18px 0 0;color:var(--ink-2);max-width:var(--measure);}
+  .notfound .code{
+    font-family:var(--font-mono);font-size:13px;color:var(--muted);margin:0 0 16px;
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" aria-label="Primary">
+  <a class="brand" translate="no" href="./">Gerasimos Balatsoukas</a>
+</nav>
+
+<main id="main" class="notfound">
+  <p class="code">Error 404</p>
+  <h1>There is no page at this address.</h1>
+  <p>The link may be out of date or mistyped. Everything on this site, from the stent model to the generator, is on the main page.</p>
+  <div class="actions">
+    <a class="btn btn-solid" href="./">Go to the portfolio</a>
+    <a class="btn btn-ghost" href="Gerasimos_Balatsoukas_CV.pdf">Download CV<span class="sr-only"> (PDF)</span></a>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="inner">
+    <div>
+      <p class="f-name" translate="no">Gerasimos Balatsoukas</p>
+      <p class="f-note">Mechanical and biomedical engineer.</p>
+    </div>
+    <ul class="f-links">
+      <li><a href="mailto:balatsoukas.gerasimos@gmail.com">balatsoukas.gerasimos@gmail.com</a></li>
+      <li><a href="https://www.linkedin.com/in/gerasimos-balatsoukas-234525313">LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>
